@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel de Vídeos</title>
+    <style>
+        .carousel-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            align-items: flex-start;
+            /* Alinhar os itens ao topo do carrossel */
+        }
+
+        .card {
+            flex: 0 0 400px;
+            max-width: 1200px;
+            height: 280px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            margin: 10px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-content {
+            padding: 10px;
+        }
+
+        .card iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        .carousel-button {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 2px;
+        }
+
+        .carousel-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .main-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .title {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .carousel-buttons-container {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width:576px) {
+            .card {
+                flex: 0 0 100%;
+                width: 100%;
+                max-width: 100%;
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="carousel-container">
+        <div class="main-button">
+            <h1 class="title">Vídeos Recentes</h1>
+            <div class="carousel-buttons-container">
+                <button class="carousel-button" id="prevBtn">❮</button>
+                <button class="carousel-button" id="nextBtn">❯</button>
+            </div>
+        </div>
+        <div class="carousel" id="carousel">
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/1StI9KiK34I" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/BdmdYNE5hTs" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/Y1E3WwjYwzY" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/K3EpEfkRz3A" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+     const carousel = document.getElementById('carousel');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let position = 0;
+        let touchStartX = 0;
+        let touchDeltaX = 0;
+
+        const SLIDE_WIDTH = 380;
+
+        function updateCarouselPosition() {
+            const maxPosition = -(carousel.scrollWidth - carousel.offsetWidth);
+            position = Math.max(maxPosition, Math.min(0, position));
+            carousel.style.transform = `translateX(${position}px)`;
+        }
+
+        function handleTouchStart(e) {
+            touchStartX = e.touches[0].clientX;
+        }
+
+        function handleTouchMove(e) {
+            if (touchStartX === 0) return;
+            touchDeltaX = e.touches[0].clientX - touchStartX;
+            e.preventDefault();
+        }
+
+        function handleTouchEnd() {
+            position += touchDeltaX;
+            updateCarouselPosition();
+            touchStartX = 0;
+            touchDeltaX = 0;
+        }
+
+        function handlePrevClick() {
+            position += SLIDE_WIDTH;
+            updateCarouselPosition();
+        }
+
+        function handleNextClick() {
+            position -= SLIDE_WIDTH;
+            updateCarouselPosition();
+        }
+
+        carousel.addEventListener('touchstart', handleTouchStart);
+        carousel.addEventListener('touchmove', handleTouchMove);
+        carousel.addEventListener('touchend', handleTouchEnd);
+
+        prevBtn.addEventListener('click', handlePrevClick);
+        nextBtn.addEventListener('click', handleNextClick);
+    </script>
+</body>
+
+</html>
